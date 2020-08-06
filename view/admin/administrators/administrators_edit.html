@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/static/layuiAdmin/layui/css/layui.css" media="all">
+    <script src="/static/jquery/jquery.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<div class="administratorsAdd" layadmin-themealias="default">
+    <form class="layui-form" action="" lay-filter="example">
+        {foreach $data as $vo}
+        <input type="hidden" name="admin_id" value={$vo.admin_id}>
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">登录名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" value={$vo.username}>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="password" lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input" value={$vo.password}>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="modile" lay-verify="phone" placeholder="请输入号码" autocomplete="off" class="layui-input" value={$vo.modile}>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="email" lay-verify="email" placeholder="请输入邮箱" autocomplete="off" class="layui-input" value={$vo.email}>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色</label>
+                <div class="layui-input-inline">
+                    <select name="role_id">
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">审核状态</label>
+                <div class="layui-input-inline">
+                    <input type="checkbox" lay-filter="switch" name="status" lay-skin="switch" lay-text="通过|禁用"><div class="layui-unselect layui-form-switch" lay-skin="_switch"><em>通过</em><i></i></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                </div>
+            </div>
+        </div>
+        {/foreach}
+    </form>
+</div>
+
+<script src="/static/layuiAdmin/layui/layui.js"></script>
+<script src="/static/vue/vue.js"></script>
+<script src="/static/vue/vue-resource.js"></script>
+<script>
+    layui.use(['form',"layer"], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,$=layui.$
+        $.ajax({
+            url:"/admin/roleList",
+            type:"get",
+            dataType:"json",
+            data:"",
+            success:function (res) {
+                var data=res.data;
+                for (var i=0;i<data.length;i++){
+                    $("select").append("<option value='"+data[i].id+"'>"+data[i].role_name+"</option>");
+                }
+                form.render();
+            }
+        });
+
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+            layer.msg('开关checked：'+ (this.checked ? 'true' : 'false'), {
+                offset: '6px'
+            });
+            // layer.tips('温馨提示：请注意开关状态的文字可以随意定义，而不仅仅是ON|OFF', data.othis)
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function(data){
+            console.log(data.field);
+            if(data.field.status == "on") {
+                data.field.status = "1";
+            } else{
+                data.field.status = "0";
+            }
+            $.ajax({
+                url:'administratorsSaved',
+                type:'post',
+                dataType:'json',
+                data:data.field,
+                success:function (res) {
+                    layer.msg(res.message,{
+                        time:2000
+                    },function () {
+                        layer.close(layer.index);//关闭弹出层
+                        window.parent.location.reload();//刷新父级页面
+                    })
+                }
+
+            });
+            return false;
+        });
+    });
+</script>
+
+</body>
+</html>
+
+

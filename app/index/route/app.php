@@ -7,4 +7,8 @@
  */
 
 use \think\facade\Route;
-Route::get("ann","index/login/index");
+Route::get("/","/index/index/index");
+Route::group("index",function (){
+
+   Route::post("hello","index/hello");
+});

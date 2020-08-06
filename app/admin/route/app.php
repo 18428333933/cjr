@@ -15,6 +15,13 @@ Route::group('admin',function (){
     Route::get("lists","index/lists");
     Route::get("menu","menu/index");
     Route::get("administrators","administrators/index");
+    Route::get("administratorsLists","administrators/administratorsLists");
+    Route::get("administratorsAdd","administrators/administratorsAdd");
+    Route::post("administratorsSaved","administrators/administratorsSaved");
+    Route::get("administratorsDelete","administrators/administratorsDelete");
+    Route::get("administratorsEdit","administrators/administratorsEdit");
+    Route::get("loginOut","login/loginOut");
+    Route::get("roleList","administrators/roleList");
 });
 
 

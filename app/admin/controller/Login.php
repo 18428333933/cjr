@@ -13,7 +13,7 @@ namespace app\admin\controller;
 use app\admin\BaseController;
 use app\admin\model\Admin;
 use think\Exception;
-
+use think\facade\Session;
 
 
 class Login extends BaseController
@@ -28,6 +28,7 @@ class Login extends BaseController
         $param=request()->param();
         $adminModel=new Admin();
         $data=$adminModel->where(["username"=>$param["username"]])->find();
+
         if(!empty($data)){
             switch ($data){
                 case $data["password"]!=$param["password"]:
@@ -49,7 +50,7 @@ class Login extends BaseController
         }
         try{
             $this->LoginSuccess($data);
-            return adminShow(config("code.success"),config("message.success"),$param,$interfaseNumber,"base");
+            return adminShow(config("code.success"),config("message.success"),$param,$interfaseNumber,"base?username=".session(config("session.admin_username")));
         }catch (\Exception $e){
 //            return adminShow(config("code.fail"),$e->getMessage());
             \think\Log::record("登录状态:".$e->getMessage());
@@ -61,10 +62,16 @@ class Login extends BaseController
 
     public function LoginSuccess($data){
         $adminModel=new Admin();
-        $adminModel->where("id",$data["id"])->update(["number"=>$data["number"]+1]);
+        $adminModel->where("admin_id",$data["admin_id"])->update(["number"=>$data["number"]+1]);
         session(config("session.admin_username"),$data["username"]);
-        session(config("session.admin_id"),$data["id"]);
+        session(config("session.admin_id"),$data["admin_id"]);
         session(config("session.admin_type"),$data["type"]);
+    }
+
+
+    public function loginOut(){
+        Session::clear();
+        return adminShow(0,config("message.success"));
     }
 
 

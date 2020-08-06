@@ -35,13 +35,12 @@
                 </li>
                 <li class="layui-nav-item" lay-unselect>
                     <a href="javascript:;">
-                        <cite>贤心</cite>
+                        <cite id="username"></cite>
                     </a>
                     <dl class="layui-nav-child">
-                        <dd><a lay-href="set/user/info.html">基本资料</a></dd>
-                        <dd><a lay-href="set/user/password.html">修改密码</a></dd>
+
                         <hr>
-                        <dd layadmin-event="logout" style="text-align: center;"><a>退出</a></dd>
+                        <dd layadmin-event="logout" style="text-align: center;" ><a>退出</a></dd>
                     </dl>
                 </li>
 
@@ -68,10 +67,10 @@
                                 <a lay-href="/admin/index">控制台</a>
                             </dd>
                             <dd data-name="console" >
-                                <a lay-href="/admin/menu">主页一</a>
+                                <a lay-href="/admin/menu">菜单管理</a>
                             </dd>
                             <dd data-name="console">
-                                <a lay-href="/admin/administrators">主页二</a>
+                                <a lay-href="/admin/administrators">管理员管理</a>
                             </dd>
                         </dl>
                     </li>
@@ -109,13 +108,23 @@
         </div>
     </div>
 </div>
+<script src="/static/jquery/jquery.js"></script>
 <script src="/static/layuiadmin/layui/layui.js"></script>
 <script>
     layui.config({
         base: '/static/layuiadmin/' //静态资源所在路径
     }).extend({
         index: 'lib/index' //主入口模块
-    }).use('index');
+    }).use('index',function () {
+        function GetQueryString(name)
+        {
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if(r!=null)return  unescape(r[2]); return null;
+        }
+        var username=GetQueryString("username");
+        $("#username").append('<span>'+username+'</span>');
+    });
 </script>
 </body>
 </html>

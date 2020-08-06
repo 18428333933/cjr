@@ -32,9 +32,10 @@
                               <i class="layadmin-user-login-icon layui-icon layui-icon-vercode"></i>
                               <input type="text" name="vercode" placeholder="图形验证码" lay-verify="required" autocomplete="off" class="layui-input admin-input admin-input-username">
                           </div>
+
                           <div class="layui-col-xs5">
                               <div style="margin-left: 10px">
-                                  <img class="layadmin-user-login-codeimg" id="LAY-user-get-vercode" src="{:captcha_src()}" alt="captcha">
+                                  {:captcha_img()}
                               </div>
                           </div>
                       </div>
